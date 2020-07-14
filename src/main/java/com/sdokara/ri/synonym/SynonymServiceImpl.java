@@ -3,6 +3,7 @@ package com.sdokara.ri.synonym;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -84,7 +85,10 @@ public class SynonymServiceImpl implements SynonymService {
         wordKeyMap.put(word, key);
         keyWordsMap.compute(key, (l, words) -> {
             if (words == null) {
-                words = new HashSet<>();
+                /* Copy-on-write synchronization: implemented so that the reading threads not throw concurrent
+                   modification exceptions - this causes heavy performance penalties if synonym sets become extremely
+                   large, but in real life, the odds for that are pretty slim. */
+                words = new CopyOnWriteArraySet<>();
             }
             words.add(word);
             return words;
