@@ -119,12 +119,11 @@ public class SynonymServiceImpl implements SynonymService {
             if (key == null) {
                 return Collections.emptySet();
             }
-            // copying data to ensure external immutability
             Set<String> words = new HashSet<>(keyWordsMap.get(key));
             if (!words.isEmpty()) {
                 words.remove(word);
             }
-            return words;
+            return Collections.unmodifiableSet(words);
         } finally {
             readLock.unlock();
         }
@@ -134,9 +133,8 @@ public class SynonymServiceImpl implements SynonymService {
     public List<Set<String>> getAll() {
         readLock.lock();
         try {
-            // copying data to ensure external immutability
             return keyWordsMap.values().stream()
-                    .map(HashSet::new)
+                    .map(Collections::unmodifiableSet)
                     .collect(Collectors.toList());
         } finally {
             readLock.unlock();

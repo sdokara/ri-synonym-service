@@ -23,12 +23,12 @@ public interface SynonymService {
 
     /**
      * @param word the word to search by
-     * @return a set of words that are synonymous to {@code word}
+     * @return an unmodifiable set of words that are synonymous to {@code word}
      */
     Set<String> get(String word);
 
     /**
-     * @return all synonym sets
+     * @return an unmodifiable list of unmodifiable synonym sets
      */
     List<Set<String>> getAll();
 
