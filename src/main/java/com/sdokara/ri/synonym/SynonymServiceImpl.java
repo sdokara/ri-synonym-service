@@ -3,6 +3,7 @@ package com.sdokara.ri.synonym;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class SynonymServiceImpl implements SynonymService {
     private final Map<Long, Set<String>> keyWordsMap = new HashMap<>();
     private final Map<String, Long> wordKeyMap = new HashMap<>();
+    private final AtomicLong sequence = new AtomicLong();
 
     /* Having concurrent hashmaps is not enough to ensure thread-safety as the methods perform multiple operations
        with multiple entries within the maps, so the solution here is to use a read-write lock with ordinary maps. */
@@ -103,8 +105,8 @@ public class SynonymServiceImpl implements SynonymService {
         keyWordsMap.put(key, words1);
     }
 
-    private static long nextKey() {
-        return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+    private long nextKey() {
+        return sequence.incrementAndGet();
     }
 
 
