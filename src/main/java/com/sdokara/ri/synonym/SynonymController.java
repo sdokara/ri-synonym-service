@@ -33,4 +33,10 @@ public class SynonymController {
         }
         return ResponseEntity.ok(synonymService.get(word));
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> clear() {
+        synonymService.clear();
+        return ResponseEntity.noContent().build();
+    }
 }
