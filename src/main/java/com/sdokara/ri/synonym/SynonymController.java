@@ -17,7 +17,7 @@ public class SynonymController {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestParam("words[]") String[] words) {
+    public ResponseEntity<?> add(@RequestBody String[] words) {
         try {
             synonymService.add(words);
             return ResponseEntity.noContent().build();
