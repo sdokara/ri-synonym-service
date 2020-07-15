@@ -67,8 +67,11 @@ public class SynonymServiceImpl implements SynonymService {
             throw new IllegalArgumentException("At least two words must be passed");
         }
         words = Arrays.stream(words).map(String::toLowerCase).toArray(String[]::new);
-        if (Set.of(words).size() != words.length) {
-            throw new IllegalArgumentException("Words contain duplicates");
+        Set<String> set = new HashSet<>();
+        for (String word : words) {
+            if (!set.add(word)) {
+                throw new IllegalArgumentException("Duplicate word found: " + word);
+            }
         }
         for (int i = 0; i < words.length - 1; i++) {
             add(words[i], words[i + 1]);
